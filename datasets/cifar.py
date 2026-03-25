@@ -30,3 +30,22 @@ def get_cifar10(batch_size=128, num_workers=4, label_fraction=1.0):
     test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, num_workers=num_workers)
 
     return train_loader, test_loader
+
+def get_cifar10_eval(batch_size=128, num_workers=4):
+
+    transform = transforms.Compose([
+        transforms.ToTensor(),
+    ])
+
+    train_dataset = torchvision.datasets.CIFAR10(
+        root="./data", train=True, download=True, transform=transform
+    )
+
+    test_dataset = torchvision.datasets.CIFAR10(
+        root="./data", train=False, download=True, transform=transform
+    )
+
+    train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=False, num_workers=num_workers)
+    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, num_workers=num_workers)
+
+    return train_loader, test_loader
