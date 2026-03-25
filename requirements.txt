@@ -1,0 +1,9 @@
+torch 
+torchvision 
+timm
+numpy 
+matplotlib 
+scikit-learn 
+tqdm
+wandb
+pytorch-lightning

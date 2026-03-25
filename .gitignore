@@ -1,0 +1,6 @@
+logs/
+*.pt
+*.pth
+__pycache__/
+wandb/
+data/
