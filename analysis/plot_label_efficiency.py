@@ -12,6 +12,7 @@ supervised = np.array([0.6599, 0.4047, 0.3027, 0.2027])
 
 # SimCLR results (aligning with same fractions)
 simclr = np.array([0.5020, 0.4974, 0.4876, 0.4318])
+byol = np.array([0.3256, 0.3266, 0.3192, 0.3167])
 
 # -----------------------------
 # Plotting
@@ -21,11 +22,12 @@ plt.figure(figsize=(7, 5))
 
 plt.plot(fractions, supervised, marker='o', linewidth=2, label='Supervised')
 plt.plot(fractions, simclr, marker='o', linewidth=2, label='SimCLR')
+plt.plot(fractions, byol, marker='o', linewidth=2, label='BYOL')
 
 plt.xscale('log')
 plt.xlabel('Label Fraction (log scale)')
 plt.ylabel('Accuracy')
-plt.title('Label Efficiency Comparison: Supervised vs SimCLR')
+plt.title('Label Efficiency Comparison: Supervised vs SimCLR vs BYOL')
 
 plt.grid(True, which="both", linestyle="--", alpha=0.6)
 plt.legend()
@@ -46,6 +48,8 @@ def compute_les(fractions, accuracies):
 
 les_supervised = compute_les(fractions, supervised)
 les_simclr = compute_les(fractions, simclr)
+les_byol = compute_les(fractions, byol)
 
 print(f"Supervised LES: {les_supervised:.4f}")
 print(f"SimCLR LES: {les_simclr:.4f}")
+print(f"BYOL LES: {les_byol:.4f}")
