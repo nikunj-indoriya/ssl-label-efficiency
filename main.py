@@ -13,7 +13,7 @@ def main():
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    label_fraction = 0.01  #change this to 0.01, 0.05, etc.
+    label_fraction = 1.0  #change this to 0.01, 0.05, etc.
 
     train_loader, test_loader = get_cifar10(label_fraction=label_fraction)
 
@@ -31,6 +31,8 @@ def main():
         print(f"Epoch {epoch}: Loss={loss:.4f}, Acc={finetune_acc:.4f}")
 
     results.append((label_fraction, finetune_acc))
+    torch.save(model.state_dict(), "supervised_model.pth")
+    print("Supervised model saved as supervised_model.pth")
 
     # -----Linear Probe-----
     # Full-data linear probe

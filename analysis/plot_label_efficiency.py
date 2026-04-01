@@ -1,32 +1,51 @@
 import matplotlib.pyplot as plt
+import numpy as np
 
-fractions = [1.0, 0.1, 0.05, 0.01]
-accuracies = [0.6599, 0.4047, 0.3027, 0.2027]
+# -----------------------------
+# Data
+# -----------------------------
 
-plt.figure()
-plt.plot(fractions, accuracies, marker='o')
+fractions = np.array([1.0, 0.1, 0.05, 0.01])
+
+# Supervised results
+supervised = np.array([0.6599, 0.4047, 0.3027, 0.2027])
+
+# SimCLR results (aligning with same fractions)
+simclr = np.array([0.5020, 0.4974, 0.4876, 0.4318])
+
+# -----------------------------
+# Plotting
+# -----------------------------
+
+plt.figure(figsize=(7, 5))
+
+plt.plot(fractions, supervised, marker='o', linewidth=2, label='Supervised')
+plt.plot(fractions, simclr, marker='o', linewidth=2, label='SimCLR')
 
 plt.xscale('log')
 plt.xlabel('Label Fraction (log scale)')
 plt.ylabel('Accuracy')
-plt.title('Label Efficiency Curve (Supervised Baseline)')
+plt.title('Label Efficiency Comparison: Supervised vs SimCLR')
 
-plt.grid(True)
-plt.savefig('label_efficiency.png')
+plt.grid(True, which="both", linestyle="--", alpha=0.6)
+plt.legend()
+
+plt.savefig('label_efficiency_comparison.png')
 plt.show()
 
-import numpy as np
+# -----------------------------
+# LES Calculation
+# -----------------------------
 
-fractions = np.array([1.0, 0.1, 0.05, 0.01])
-accuracies = np.array([0.6599, 0.4047, 0.3027, 0.2027])
+def compute_les(fractions, accuracies):
+    log_f = np.log(fractions)
+    sorted_idx = np.argsort(log_f)
+    log_f = log_f[sorted_idx]
+    accuracies = accuracies[sorted_idx]
+    return np.trapezoid(accuracies, log_f)
 
-log_f = np.log(fractions)
+les_supervised = compute_les(fractions, supervised)
+les_simclr = compute_les(fractions, simclr)
 
-# Sort (important for integration)
-sorted_idx = np.argsort(log_f)
-log_f = log_f[sorted_idx]
-accuracies = accuracies[sorted_idx]
-
-les = np.trapezoid(accuracies, log_f)
-
-print("Label Efficiency Score (LES):", les)
+print(f"Supervised LES: {les_supervised:.4f}")
+print(f"SimCLR LES: {les_simclr:.4f}")
