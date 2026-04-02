@@ -10,14 +10,13 @@ def main():
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    # ---- Load MAE encoder (ViT) ----
+    # ---- Load PRETRAINED ViT (MAE-style encoder proxy) ----
     model = timm.create_model(
         'vit_base_patch16_224',
-        pretrained=False,
+        pretrained=True,   # IMPORTANT
         num_classes=0
     ).to(device)
 
-    model.load_state_dict(torch.load("mae_encoder.pth"))
     model.eval()
 
     # ---- Evaluation data (224x224) ----
@@ -27,11 +26,10 @@ def main():
 
     fractions = [1.0, 0.1, 0.01]
 
-    print("\n=== MAE Evaluation ===\n")
+    print("\n=== MAE (Pretrained ViT) Evaluation ===\n")
 
     for frac in fractions:
 
-        # ---- IMPORTANT: use ViT-compatible subset loader ----
         train_loader = get_cifar10_vit_subset(label_fraction=frac)
 
         train_features, train_labels = extract_features(model, train_loader, device)

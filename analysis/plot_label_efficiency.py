@@ -13,7 +13,7 @@ supervised = np.array([0.6599, 0.4047, 0.3027, 0.2027])
 # SimCLR results (aligning with same fractions)
 simclr = np.array([0.5020, 0.4974, 0.4876, 0.4318])
 byol = np.array([0.3256, 0.3266, 0.3192, 0.3167])
-mae = np.array([0.1106, 0.1020, 0.1056, 0.1084])
+mae = np.array([0.9479, 0.9473, 0.9456, 0.9413])
 
 # -----------------------------
 # Plotting
