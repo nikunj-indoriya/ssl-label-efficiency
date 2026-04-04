@@ -2,8 +2,9 @@ import torchvision
 import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
 from .utils import create_label_subset
+from .utils import add_label_noise
 
-def get_cifar10(batch_size=128, num_workers=4, label_fraction=1.0):
+def get_cifar10(batch_size=128, num_workers=4, label_fraction=1.0, noise_ratio=0.0):
 
     transform_train = transforms.Compose([
         transforms.RandomResizedCrop(32),
@@ -21,6 +22,9 @@ def get_cifar10(batch_size=128, num_workers=4, label_fraction=1.0):
 
     if label_fraction < 1.0:
         train_dataset = create_label_subset(train_dataset, label_fraction)
+
+    if noise_ratio > 0.0:
+        train_dataset = add_label_noise(train_dataset, noise_ratio)
 
     test_dataset = torchvision.datasets.CIFAR10(
         root="./data", train=False, download=True, transform=transform_test
