@@ -12,3 +12,15 @@ We evaluate how different SSL paradigms perform under extreme low-label regimes 
 ## Architectures
 - ResNet-50
 - Vision Transformer (ViT)
+
+## Run everything in order
+1. Supervised
+python main.py
+2. SimCLR 
+python -m scripts.evaluate_simclr
+3. BYOL
+python -m scripts.evaluate_byol
+4. MAE 
+python -m scripts.evaluate_mae
+5. Plot
+python -m analysis.plot_label_efficiency

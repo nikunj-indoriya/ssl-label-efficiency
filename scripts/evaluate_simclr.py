@@ -22,7 +22,7 @@ def main():
     test_features, test_labels = extract_features(model, eval_test_loader, device)
 
     # -------- Evaluate across label fractions --------
-    fractions = [1.0, 0.1, 0.05, 0.01]
+    fractions = [1.0, 0.5, 0.2, 0.1, 0.05, 0.01]
 
     print("\n=== SimCLR Evaluation ===\n")
 

@@ -1,59 +1,50 @@
-import matplotlib.pyplot as plt
 import numpy as np
+import matplotlib.pyplot as plt
 
-# -----------------------------
-# Data
-# -----------------------------
+fractions = np.array([1.0, 0.5, 0.2, 0.1, 0.05, 0.01])
 
-fractions = np.array([1.0, 0.1, 0.05, 0.01])
+supervised = np.array([0.6360, 0.6027, 0.4655, 0.4050, 0.3264, 0.2264])
+simclr = np.array([0.4502, 0.4514, 0.4495, 0.4506, 0.4461, 0.4409])
+byol = np.array([0.3120, 0.3134, 0.3095, 0.3134, 0.3106, 0.2922])
+mae = np.array([0.9505, 0.9500, 0.9486, 0.9487, 0.9487, 0.9450])
 
-# Supervised results
-supervised = np.array([0.6599, 0.4047, 0.3027, 0.2027])
+log_f = np.log(fractions)
 
-# SimCLR results (aligning with same fractions)
-simclr = np.array([0.5020, 0.4974, 0.4876, 0.4318])
-byol = np.array([0.3256, 0.3266, 0.3192, 0.3167])
-mae = np.array([0.9479, 0.9473, 0.9456, 0.9413])
+# sort
+idx = np.argsort(log_f)
+log_f = log_f[idx]
 
-# -----------------------------
-# Plotting
-# -----------------------------
+def compute_les(acc):
+    acc = acc[idx]
+    return np.trapezoid(acc, log_f) / abs(log_f.min())
 
-plt.figure(figsize=(7, 5))
+les_sup = compute_les(supervised)
+les_sim = compute_les(simclr)
+les_byol = compute_les(byol)
+les_mae = compute_les(mae)
 
-plt.plot(fractions, supervised, marker='o', linewidth=2, label='Supervised')
-plt.plot(fractions, simclr, marker='o', linewidth=2, label='SimCLR')
-plt.plot(fractions, byol, marker='o', linewidth=2, label='BYOL')
-plt.plot(fractions, mae, marker='o', linewidth=2, label='MAE')
+print("Supervised LES:", les_sup)
+print("SimCLR LES:", les_sim)
+print("BYOL LES:", les_byol)
+print("MAE LES:", les_mae)
+
+print("\nΔLES (SimCLR):", les_sim - les_sup)
+print("ΔLES (BYOL):", les_byol - les_sup)
+print("ΔLES (MAE):", les_mae - les_sup)
+
+# Plot
+plt.figure()
+plt.plot(fractions, supervised, marker='o', label='Supervised')
+plt.plot(fractions, simclr, marker='o', label='SimCLR')
+plt.plot(fractions, byol, marker='o', label='BYOL')
+plt.plot(fractions, mae, marker='o', label='MAE')
 
 plt.xscale('log')
 plt.xlabel('Label Fraction (log scale)')
 plt.ylabel('Accuracy')
 plt.title('Label Efficiency Comparison')
 
-plt.grid(True, which="both", linestyle="--", alpha=0.6)
 plt.legend()
-
+plt.grid(True)
 plt.savefig('label_efficiency_comparison.png')
 plt.show()
-
-# -----------------------------
-# LES Calculation
-# -----------------------------
-
-def compute_les(fractions, accuracies):
-    log_f = np.log(fractions)
-    sorted_idx = np.argsort(log_f)
-    log_f = log_f[sorted_idx]
-    accuracies = accuracies[sorted_idx]
-    return np.trapezoid(accuracies, log_f)
-
-les_supervised = compute_les(fractions, supervised)
-les_simclr = compute_les(fractions, simclr)
-les_byol = compute_les(fractions, byol)
-les_mae = compute_les(fractions, mae)
-
-print(f"Supervised LES: {les_supervised:.4f}")
-print(f"SimCLR LES: {les_simclr:.4f}")
-print(f"BYOL LES: {les_byol:.4f}")
-print(f"MAE LES: {les_mae:.4f}")
