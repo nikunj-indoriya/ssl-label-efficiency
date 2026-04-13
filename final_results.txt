@@ -1,0 +1,134 @@
+==================================================
+FINAL EXPERIMENT RESULTS
+Label Efficiency, Noise Robustness, Representation Geometry
+==================================================
+
+Dataset: CIFAR-10
+Backbone: ResNet50 (Supervised, SimCLR, BYOL)
+MAE: ViT-Base (Pretrained)
+Evaluation: Linear Probe + Fine-tuning
+Device: GPU (16GB)
+
+==================================================
+1. LABEL EFFICIENCY RESULTS
+==================================================
+
+Label Fractions: [1.0, 0.5, 0.2, 0.1, 0.05, 0.01]
+
+--- Supervised (Fine-tune Accuracy) ---
+1.0  : 0.6833
+0.5  : 0.5817
+0.2  : 0.4181
+0.1  : 0.3981
+0.05 : 0.3920
+0.01 : 0.1705
+
+--- SimCLR (Linear Probe) ---
+1.0  : 0.4531
+0.5  : 0.4520
+0.2  : 0.4513
+0.1  : 0.4507
+0.05 : 0.4474
+0.01 : 0.4266
+
+--- BYOL (Linear Probe) ---
+1.0  : 0.3109
+0.5  : 0.3110
+0.2  : 0.3115
+0.1  : 0.3143
+0.05 : 0.3096
+0.01 : 0.3100
+
+--- MAE (Linear Probe, Pretrained ViT) ---
+1.0  : 0.9498
+0.5  : 0.9500
+0.2  : 0.9490
+0.1  : 0.9491
+0.05 : 0.9497
+0.01 : 0.9440
+
+==================================================
+2. LABEL EFFICIENCY SCORE (LES)
+==================================================
+
+--- Normalized LES ---
+Supervised : 0.4138
+SimCLR     : 0.4462
+BYOL       : 0.3111
+MAE        : 0.9486
+
+--- ΔLES (relative to supervised) ---
+SimCLR : +0.0323
+BYOL   : -0.1028
+MAE    : +0.5347
+
+==================================================
+3. LABEL NOISE ROBUSTNESS
+==================================================
+
+Label Fraction: 10%
+
+Noise Levels: [0%, 20%, 40%]
+
+--- Supervised ---
+0%  : Acc = 0.3889 | Robustness = 1.0000
+20% : Acc = 0.3835 | Robustness = 0.9861
+40% : Acc = 0.3192 | Robustness = 0.8208
+
+--- SimCLR ---
+0%  : Acc = 0.4552 | Robustness = 1.0000
+20% : Acc = 0.4465 | Robustness = 0.9809
+40% : Acc = 0.4224 | Robustness = 0.9279
+
+--- BYOL ---
+0%  : Acc = 0.3125 | Robustness = 1.0000
+20% : Acc = 0.3066 | Robustness = 0.9811
+40% : Acc = 0.3087 | Robustness = 0.9878
+
+--- MAE ---
+0%  : Acc = 0.9492 | Robustness = 1.0000
+20% : Acc = 0.9489 | Robustness = 0.9997
+40% : Acc = 0.9490 | Robustness = 0.9998
+
+==================================================
+4. REPRESENTATION GEOMETRY
+==================================================
+
+--- Supervised ---
+Effective Rank       : 25.6738
+Intra-class Variance : 0.4390
+Inter-class Distance : 0.7953
+Separation Ratio     : 1.8115
+
+--- SimCLR ---
+Effective Rank       : 22.9441
+Intra-class Variance : 0.5311
+Inter-class Distance : 0.5250
+Separation Ratio     : 0.9886
+
+--- BYOL ---
+Effective Rank       : 5.7685
+Intra-class Variance : 0.3938
+Inter-class Distance : 0.5459
+Separation Ratio     : 1.3861
+
+--- MAE ---
+Effective Rank       : 180.5604
+Intra-class Variance : 0.5503
+Inter-class Distance : 0.6571
+Separation Ratio     : 1.1940
+
+==================================================
+KEY OBSERVATIONS
+==================================================
+
+1. SimCLR improves label efficiency over supervised learning.
+2. BYOL shows lower diversity (low rank) and weaker performance.
+3. MAE achieves highest LES but benefits from large-scale pretraining.
+4. SSL methods (SimCLR, MAE) show higher robustness to label noise.
+5. Representation geometry correlates with performance:
+   - High rank → better generalization (MAE)
+   - High separation → better supervised clustering
+   - Balanced structure → best SSL performance
+
+==================================================
